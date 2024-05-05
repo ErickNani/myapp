@@ -16,7 +16,7 @@ Follow these steps to get the project up and running on your local machine:
 1. Clone this repository to your local machine:
 
     ```bash
-    git clone https://github.com/your-username/your-repository.git
+    git clone https://github.com/ErickNani/myapp.git
     ```
 
 2. Navigate to the project directory:
