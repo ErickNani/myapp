@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 const router = express.Router();
 
 var indexRouter = require('./routes/index');
@@ -16,6 +17,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -26,7 +28,7 @@ router.use((req, res, next)=>{
   if(req.headers.authorization && req.headers.authorization === '123456'){
     next();
   }else{
-    res.json({'error': 'No se encontrol autorizacion!'})
+    res.status(401).json({'error': 'No se encontrol autorizacion!'})
   }
 })
 

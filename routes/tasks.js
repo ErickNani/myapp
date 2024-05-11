@@ -12,6 +12,9 @@ router.post('/addTask', function (req, res, next) {
     if (req.body && req.body.name && req.body.description && req.body.dueDate) {
         req.body.id = timestamp.toString();
         tasks.push(req.body);
+        res.json(tasks);
+    }else{
+        res.status(400).json({error: "Bad Request - Missing or Invalid Parameters"});
     }
     res.json(tasks);
 })
@@ -22,7 +25,7 @@ router.delete('/removeTask/:id', function (req, res, next) {
         tasks = tasks.filter(task => task.id !== id);
         res.json(tasks);
     }else{
-        res.json([{}]);
+        res.status(400).json({error: "Bad Request - Missing or Invalid Parameters"});
     }
         
 })
