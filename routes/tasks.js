@@ -1,33 +1,43 @@
 var express = require('express');
 var router = express.Router();
+const mongoose = require('mongoose');
 
-let tasks = [];
+const taskInit = mongoose.model('tasks', {
+    name: String,
+    description: String,
+    dueDate: String
+}, 'tasks')
+
 
 router.get('/getTasks', function (req, res, next) {
-    res.json(tasks);
+    taskInit.find({}).then((response)=> 
+        res.status(200).json(response)
+).catch((err)=>res.status(500).json(err))
+
 })
 
 router.post('/addTask', function (req, res, next) {
-    let timestamp = Date.now() + Math.random();
     if (req.body && req.body.name && req.body.description && req.body.dueDate) {
-        req.body.id = timestamp.toString();
-        tasks.push(req.body);
-        res.json(tasks);
-    }else{
-        res.status(400).json({error: "Bad Request - Missing or Invalid Parameters"});
+        const task = new taskInit(req.body);
+        task.save().then(() =>
+            res.status(200).json({})
+        ).catch((err) => res.status(500).json(err));
+    } else {
+        res.status(400).json({});
     }
-    res.json(tasks);
-})
+
+});
 
 router.delete('/removeTask/:id', function (req, res, next) {
-    if (req.params && req.params.id){
+    if (req.params && req.params.id) {
         let id = req.params.id;
-        tasks = tasks.filter(task => task.id !== id);
-        res.json(tasks);
-    }else{
-        res.status(400).json({error: "Bad Request - Missing or Invalid Parameters"});
+        taskInit.deleteOne({_id:new mongoose.Types.ObjectId(id)}).then((response)=>{
+            res.status(200).json(response);
+        }).catch(err=>res.status(500).json(err))
+    } else {
+        res.status(400).json({});
     }
-        
+
 })
 
 module.exports = router;
